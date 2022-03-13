@@ -17,6 +17,7 @@ public class Vehiculo extends AppCompatActivity {
     Button btnSave,btnConsultar,btnAnular,btnCancelar,btnRegresar;
     int sw=0;
     long resp;
+    String placa;
 
 
     @Override
@@ -60,6 +61,13 @@ public class Vehiculo extends AppCompatActivity {
                 guardarVehiculo();
             }
         });
+        btnAnular.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                anularVehiculo();
+
+            }
+        });
     }
 
     public void limpiarCampos(){
@@ -74,7 +82,6 @@ public class Vehiculo extends AppCompatActivity {
         limpiarCampos();
     }
     public void Consultar(){
-        String placa;
         placa = etPlaca.getText().toString();
         if (placa.isEmpty()){
             Toast.makeText(this, "La placa es requerida", Toast.LENGTH_SHORT).show();
@@ -96,8 +103,26 @@ public class Vehiculo extends AppCompatActivity {
             db.close();
         }
     }
+    public void anularVehiculo(){
+        Consultar();
+        if (sw==1){
+            Conexion_Consesionario admin = new Conexion_Consesionario(this,"concecionario1.bd",null,1);
+            SQLiteDatabase db = admin.getReadableDatabase();
+            ContentValues dato = new ContentValues();
+            dato.put("placa",placa);
+            dato.put("activo","no");
+            resp=db.update("TblVehiculo",dato,"placa='"+placa+"'",null);
+            if (resp>0){
+                Toast.makeText(this, "El Vehiculo fue anulado", Toast.LENGTH_SHORT).show();
+                limpiar();
+            }
+            else{
+                Toast.makeText(this, "Error al anular el vehiculo", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
     public void guardarVehiculo(){
-        String placa,marca,modelo,valor;
+        String marca,modelo,valor;
         placa = etPlaca.getText().toString();
         marca = etMarca.getText().toString();
         modelo = etModelo.getText().toString();

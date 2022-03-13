@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         String clave;
         clave = etContraseña.getText().toString();
         usuario = etUsuario.getText().toString();
+
         if (usuario.isEmpty()||clave.isEmpty()){
             Toast.makeText(this, "Necesita un usuario y contraseña", Toast.LENGTH_SHORT).show();
             etUsuario.requestFocus();
